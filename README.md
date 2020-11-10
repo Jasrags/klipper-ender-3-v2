@@ -1,0 +1,486 @@
+# This file contains pin mappings for the stock 2020 Creality Ender 3
+# V2. To use this config, during "make menuconfig" select the
+# STM32F103 with a "28KiB bootloader" and with "Use USB for
+# communication" disabled.
+
+# If you prefer a direct serial connection, in "make menuconfig"
+# select "Enable extra low-level configuration options" and select the
+# USART3 serial port, which is broken out on the 10 pin IDC cable used
+# for the LCD module as follows:
+# 3: Tx, 4: Rx, 9: GND, 10: VCC
+
+# Flash this firmware by copying "out/klipper.bin" to a SD card and
+# turning on the printer with the card inserted. The firmware
+# filename must end in ".bin" and must not match the last filename
+# that was flashed.
+
+# See the example.cfg file for a description of available parameters.
+
+# https://github.com/KevinOConnor/klipper/blob/master/config/example.cfg
+# https://github.com/KevinOConnor/klipper/blob/master/config/example-extras.cfg
+
+# The stepper_x section is used to describe the stepper controlling
+# the X axis in a cartesian robot.
+[stepper_x]
+step_pin: PC2
+#   Step GPIO pin (triggered high). This parameter must be provided.
+dir_pin: PB9
+#   Direction GPIO pin (high indicates positive direction). This
+#   parameter must be provided.
+enable_pin: !PC3
+#   Enable pin (default is enable high; use ! to indicate enable
+#   low). If this parameter is not provided then the stepper motor
+#   driver must always be enabled.
+step_distance: .0125
+#   Distance in mm that each step causes the axis to travel. This
+#   parameter must be provided.
+endstop_pin: ^PA5
+#   Endstop switch detection pin. This parameter must be provided for
+#   the X, Y, and Z steppers on cartesian style printers.
+#position_min: 0
+#   Minimum valid distance (in mm) the user may command the stepper to
+#   move to.  The default is 0mm.
+position_endstop: 0
+#   Location of the endstop (in mm). This parameter must be provided
+#   for the X, Y, and Z steppers on cartesian style printers.
+position_max: 235
+#   Maximum valid distance (in mm) the user may command the stepper to
+#   move to. This parameter must be provided for the X, Y, and Z
+#   steppers on cartesian style printers.
+homing_speed: 100
+#   Maximum velocity (in mm/s) of the stepper when homing. The default
+#   is 5mm/s.
+#homing_retract_dist: 5.0
+#   Distance to backoff (in mm) before homing a second time during
+#   homing. Set this to zero to disable the second home. The default
+#   is 5mm.
+#homing_retract_speed:
+#   Speed to use on the retract move after homing in case this should
+#   be different from the homing speed, which is the default for this
+#   parameter
+#second_homing_speed:
+#   Velocity (in mm/s) of the stepper when performing the second home.
+#   The default is homing_speed/2.
+#homing_positive_dir:
+#   If true, homing will cause the stepper to move in a positive
+#   direction (away from zero); if false, home towards zero. It is
+#   better to use the default than to specify this parameter. The
+#   default is true if position_endstop is near position_max and false
+#   if near position_min.
+
+# The stepper_y section is used to describe the stepper controlling
+# the Y axis in a cartesian robot. It has the same settings as the
+# stepper_x section.
+[stepper_y]
+step_pin: PB8
+dir_pin: PB7
+enable_pin: !PC3
+step_distance: .0125
+endstop_pin: ^PA6
+position_endstop: 0
+position_max: 235
+homing_speed: 100
+
+# The stepper_z section is used to describe the stepper controlling
+# the Z axis in a cartesian robot. It has the same settings as the
+# stepper_x section.
+[stepper_z]
+step_pin: PB6
+dir_pin: !PB5
+enable_pin: !PC3
+step_distance: .0025
+# endstop_pin: ^PA7
+endstop_pin: probe:z_virtual_endstop
+position_max: 250
+# position_min: 0
+position_min: -2.2
+homing_speed: 10.0
+
+# The extruder section is used to describe both the stepper
+# controlling the printer extruder and the heater parameters for the
+# nozzle. The stepper configuration has the same settings as the
+# stepper_x section.
+[extruder]
+step_pin: PB4
+dir_pin: PB3
+enable_pin: !PC3
+step_distance: 0.010752
+nozzle_diameter: 0.400
+#   Diameter of the nozzle orifice (in mm). This parameter must be
+#   provided.
+filament_diameter: 1.750
+#   The nominal diameter of the raw filament (in mm) as it enters the
+#   extruder. This parameter must be provided.
+#max_extrude_cross_section:
+#   Maximum area (in mm^2) of an extrusion cross section (eg,
+#   extrusion width multiplied by layer height). This setting prevents
+#   excessive amounts of extrusion during relatively small XY moves.
+#   If a move requests an extrusion rate that would exceed this value
+#   it will cause an error to be returned. The default is: 4.0 *
+#   nozzle_diameter^2
+#instantaneous_corner_velocity: 1.000
+#   The maximum instantaneous velocity change (in mm/s) of the
+#   extruder during the junction of two moves. The default is 1mm/s.
+max_extrude_only_distance: 100.0
+#   Maximum length (in mm of raw filament) that a retraction or
+#   extrude-only move may have. If a retraction or extrude-only move
+#   requests a distance greater than this value it will cause an error
+#   to be returned. The default is 50mm.
+#max_extrude_only_velocity:
+#max_extrude_only_accel:
+#   Maximum velocity (in mm/s) and acceleration (in mm/s^2) of the
+#   extruder motor for retractions and extrude-only moves. These
+#   settings do not have any impact on normal printing moves. If not
+#   specified then they are calculated to match the limit an XY
+#   printing move with a cross section of 4.0*nozzle_diameter^2 would
+#   have.
+#pressure_advance: 0.0
+#   The amount of raw filament to push into the extruder during
+#   extruder acceleration. An equal amount of filament is retracted
+#   during deceleration. It is measured in millimeters per
+#   millimeter/second. The default is 0, which disables pressure
+#   advance.
+#pressure_advance_smooth_time: 0.040
+#   A time range (in seconds) to use when calculating the average
+#   extruder velocity for pressure advance. A larger value results in
+#   smoother extruder movements. This parameter may not exceed 200ms.
+#   This setting only applies if pressure_advance is non-zero. The
+#   default is 0.040 (40 milliseconds).
+#
+# The remaining variables describe the extruder heater.
+heater_pin: PA1
+#   PWM output pin controlling the heater. This parameter must be
+#   provided.
+#max_power: 1.0
+#   The maximum power (expressed as a value from 0.0 to 1.0) that the
+#   heater_pin may be set to. The value 1.0 allows the pin to be set
+#   fully enabled for extended periods, while a value of 0.5 would
+#   allow the pin to be enabled for no more than half the time. This
+#   setting may be used to limit the total power output (over extended
+#   periods) to the heater. The default is 1.0.
+sensor_type: EPCOS 100K B57560G104F
+#   Type of sensor - common thermistors are "EPCOS 100K B57560G104F",
+#   "ATC Semitec 104GT-2", "NTC 100K beta 3950", "Honeywell 100K
+#   135-104LAG-J01", "NTC 100K MGB18-104F39050L32",
+#   "SliceEngineering 450", and "TDK NTCG104LH104JT1". See the
+#   example-extras.cfg file for other sensors. This parameter must be
+#   provided.
+sensor_pin: PC5
+#   Analog input pin connected to the sensor. This parameter must be
+#   provided.
+#pullup_resistor: 4700
+#   The resistance (in ohms) of the pullup attached to the thermistor.
+#   This parameter is only valid when the sensor is a thermistor. The
+#   default is 4700 ohms.
+#inline_resistor: 0
+#   The resistance (in ohms) of an extra (not heat varying) resistor
+#   that is placed inline with the thermistor. It is rare to set this.
+#   This parameter is only valid when the sensor is a thermistor. The
+#   default is 0 ohms.
+#smooth_time: 2.0
+#   A time value (in seconds) over which temperature measurements will
+#   be smoothed to reduce the impact of measurement noise. The default
+#   is 2 seconds.
+control: pid
+#   Control algorithm (either pid or watermark). This parameter must
+#   be provided.
+# pid_Kp: 22.2
+#   Kp is the "proportional" constant for the pid. This parameter must
+#   be provided for PID heaters.
+# pid_Ki: 1.08
+#   Ki is the "integral" constant for the pid. This parameter must be
+#   provided for PID heaters.
+# pid_Kd: 114
+#   Kd is the "derivative" constant for the pid. This parameter must
+#   be provided for PID heaters.
+#pid_integral_max:
+#   The maximum "windup" the integral term may accumulate. The default
+#   is to use the same value as max_power.
+#max_delta: 2.0
+#   On 'watermark' controlled heaters this is the number of degrees in
+#   Celsius above the target temperature before disabling the heater
+#   as well as the number of degrees below the target before
+#   re-enabling the heater. The default is 2 degrees Celsius.
+#pwm_cycle_time: 0.100
+#   Time in seconds for each software PWM cycle of the heater. It is
+#   not recommended to set this unless there is an electrical
+#   requirement to switch the heater faster than 10 times a second.
+#   The default is 0.100 seconds.
+#min_extrude_temp: 170
+#   The minimum temperature (in Celsius) at which extruder move
+#   commands may be issued. The default is 170 Celsius.
+min_temp: 0
+max_temp: 250
+#   The maximum range of valid temperatures (in Celsius) that the
+#   heater must remain within. This controls a safety feature
+#   implemented in the micro-controller code - should the measured
+#   temperature ever fall outside this range then the micro-controller
+#   will go into a shutdown state. This check can help detect some
+#   heater and sensor hardware failures. Set this range just wide
+#   enough so that reasonable temperatures do not result in an
+#   error. These parameters must be provided.
+
+# The heater_bed section describes a heated bed (if present - omit
+# section if not present). It uses the same heater settings described
+# in the extruder section.
+[heater_bed]
+heater_pin: PA2
+sensor_type: EPCOS 100K B57560G104F
+sensor_pin: PC4
+control: pid
+# tuned for stock hardware with 50 degree Celsius target
+#pid_Kp: 54.027
+#pid_Ki: 0.770
+#pid_Kd: 948.182
+min_temp: 0
+max_temp: 130
+
+# Print cooling fan (omit section if fan not present).
+[fan]
+pin: PA0
+#   PWM output pin controlling the fan. This parameter must be
+#   provided.
+#max_power: 1.0
+#   The maximum power (expressed as a value from 0.0 to 1.0) that the
+#   pin may be set to. The value 1.0 allows the pin to be set fully
+#   enabled for extended periods, while a value of 0.5 would allow the
+#   pin to be enabled for no more than half the time. This setting may
+#   be used to limit the total power output (over extended periods) to
+#   the fan. If this value is less than 1.0 then fan speed requests
+#   will be scaled between zero and max_power (for example, if
+#   max_power is .9 and a fan speed of 80% is requested then the fan
+#   power will be set to 72%). The default is 1.0.
+#shutdown_speed: 0
+#   The desired fan speed (expressed as a value from 0.0 to 1.0) if
+#   the micro-controller software enters an error state. The default
+#   is 0.
+#cycle_time: 0.010
+#   The amount of time (in seconds) for each PWM power cycle to the
+#   fan. It is recommended this be 10 milliseconds or greater when
+#   using software based PWM. The default is 0.010 seconds.
+#hardware_pwm: False
+#   Enable this to use hardware PWM instead of software PWM. Most fans
+#   do not work well with hardware PWM, so it is not recommended to
+#   enable this unless there is an electrical requirement to switch at
+#   very high speeds. When using hardware PWM the actual cycle time is
+#   constrained by the implementation and may be significantly
+#   different than the requested cycle_time. The default is False.
+#kick_start_time: 0.100
+#   Time (in seconds) to run the fan at full speed when either first
+#   enabling or increasing it by more than 50% (helps get the fan
+#   spinning). The default is 0.100 seconds.
+#off_below: 0.0
+#   The minimum input speed which will power the fan (expressed as a
+#   value from 0.0 to 1.0). When a speed lower than off_below is
+#   requested the fan will instead be turned off. This setting may be
+#   used to prevent fan stalls and to ensure kick starts are
+#   effective. The default is 0.0.
+#
+#   This setting should be recalibrated whenever max_power is adjusted.
+#   To calibrate this setting, start with off_below set to 0.0 and the
+#   fan spinning. Gradually lower the fan speed to determine the lowest
+#   input speed which reliably drives the fan without stalls. Set
+#   off_below to the duty cycle corresponding to this value (for
+#   example, 12% -> 0.12) or slightly higher.
+
+# Micro-controller information.
+[mcu]
+serial: /dev/serial/by-id/usb-1a86_USB_Serial-if00-port0
+#   The serial port to connect to the MCU. If unsure (or if it
+#   changes) see the "Where's my serial port?" section of the FAQ. The
+#   default is /dev/ttyS0
+#baud: 250000
+#   The baud rate to use. The default is 250000.
+# pin_map: arduino
+#   This option may be used to enable Arduino pin name aliases. The
+#   default is to not enable the aliases.
+restart_method: command
+#   This controls the mechanism the host will use to reset the
+#   micro-controller. The choices are 'arduino', 'cheetah', 'rpi_usb',
+#   and 'command'. The 'arduino' method (toggle DTR) is common on
+#   Arduino boards and clones. The 'cheetah' method is a special
+#   method needed for some Fysetc Cheetah boards. The 'rpi_usb' method
+#   is useful on Raspberry Pi boards with micro-controllers powered
+#   over USB - it briefly disables power to all USB ports to
+#   accomplish a micro-controller reset. The 'command' method involves
+#   sending a Klipper command to the micro-controller so that it can
+#   reset itself. The default is 'arduino' if the micro-controller
+#   communicates over a serial port, 'command' otherwise.
+
+# The printer section controls high level printer settings.
+[printer]
+kinematics: cartesian
+#   This option must be "cartesian" for cartesian printers.
+max_velocity: 300
+#   Maximum velocity (in mm/s) of the toolhead (relative to the
+#   print). This parameter must be specified.
+max_accel: 3000
+#   Maximum acceleration (in mm/s^2) of the toolhead (relative to the
+#   print). This parameter must be specified.
+#max_accel_to_decel:
+#   A pseudo acceleration (in mm/s^2) controlling how fast the
+#   toolhead may go from acceleration to deceleration. It is used to
+#   reduce the top speed of short zig-zag moves (and thus reduce
+#   printer vibration from these moves). The default is half of
+#   max_accel.
+max_z_velocity: 5
+#   For cartesian printers this sets the maximum velocity (in mm/s) of
+#   movement along the z axis. This setting can be used to restrict
+#   the maximum speed of the z stepper motor on cartesian printers.
+#   The default is to use max_velocity for max_z_velocity.
+max_z_accel: 100
+#   For cartesian printers this sets the maximum acceleration (in
+#   mm/s^2) of movement along the z axis. It limits the acceleration
+#   of the z stepper motor on cartesian printers. The default is to
+#   use max_accel for max_z_accel.
+#square_corner_velocity: 5.0
+#   The maximum velocity (in mm/s) that the toolhead may travel a 90
+#   degree corner at. A non-zero value can reduce changes in extruder
+#   flow rates by enabling instantaneous velocity changes of the
+#   toolhead during cornering. This value configures the internal
+#   centripetal velocity cornering algorithm; corners with angles
+#   larger than 90 degrees will have a higher cornering velocity while
+#   corners with angles less than 90 degrees will have a lower
+#   cornering velocity. If this is set to zero then the toolhead will
+#   decelerate to zero at each corner. The default is 5mm/s.
+
+# [board_pins]
+# aliases:
+#     # EXP1 header
+#     EXP1_1=PB13, EXP1_3=PA9,   EXP1_5=PA10, EXP1_7=PB8, EXP1_9=<GND>,
+#     EXP1_2=PA15, EXP1_4=<RST>, EXP1_6=PB9,  EXP1_8=PB15, EXP1_10=<5V>
+
+######################################################################
+# EXTRAS
+######################################################################
+# Include file support. One may include additional config file from
+# the main printer config file. Wildcards may also be used (eg,
+# "configs/*.cfg").
+[include configs/*.cfg]
+# [include configs/bed_level.cfg]
+# [include configs/customized_homing.cfg]
+# [include configs/gcode_macros.cfg]
+# [include configs/resonance_compensation.cfg]
+# [include configs/filament_sensors.cfg]
+# [include configs/display.cfg]
+
+
+
+
+
+######################################################################
+# Config file helpers
+######################################################################
+
+# Board pin aliases. One may define aliases for the pins on a
+# micro-controller. (If a micro-controller name is omitted in the
+# board_pins config section name then it defaults to "mcu".)
+#[board_pins mcu]
+#aliases:
+#   A comma separated list of "name=value" aliases to create for the
+#   given micro-controller. For example, "EXP1_1=PE6" would create an
+#   "EXP1_1" alias for the "PE6" pin. However, if "value" is enclosed
+#   in "<>" then "name" is created as a reserved pin (for example,
+#   "EXP1_9=<GND>" would reserve "EXP1_9"). This parameter must be
+#   provided.
+
+# Include file support. One may include additional config file from
+# the main printer config file. Wildcards may also be used (eg,
+# "configs/*.cfg").
+#[include my_other_config.cfg]
+
+
+# Run-time configurable output pins (one may define any number of
+# sections with an "output_pin" prefix). Pins configured here will be
+# setup as output pins and one may modify them at run-time using
+# "SET_PIN PIN=my_pin VALUE=.1" type extended g-code commands.
+#[output_pin my_pin]
+#pin:
+#   The pin to configure as an output. This parameter must be
+#   provided.
+#pwm: False
+#   Set if the output pin should be capable of pulse-width-modulation.
+#   If this is true, the value fields should be between 0 and 1; if it
+#   is false the value fields should be either 0 or 1. The default is
+#   False.
+#static_value:
+#   If this is set, then the pin is assigned to this value at startup
+#   and the pin can not be changed during runtime. A static pin uses
+#   slightly less ram in the micro-controller. The default is to use
+#   runtime configuration of pins.
+#value:
+#   The value to initially set the pin to during MCU configuration.
+#   The default is 0 (for low voltage).
+#shutdown_value:
+#   The value to set the pin to on an MCU shutdown event. The default
+#   is 0 (for low voltage).
+#cycle_time: 0.100
+#   The amount of time (in seconds) per PWM cycle. It is recommended
+#   this be 10 milliseconds or greater when using software based PWM.
+#   The default is 0.100 seconds for pwm pins.
+#hardware_pwm: False
+#   Enable this to use hardware PWM instead of software PWM. When
+#   using hardware PWM the actual cycle time is constrained by the
+#   implementation and may be significantly different than the
+#   requested cycle_time. The default is False.
+#scale:
+#   This parameter can be used to alter how the 'value' and
+#   'shutdown_value' parameters are interpreted for pwm pins. If
+#   provided, then the 'value' parameter should be between 0.0 and
+#   'scale'. This may be useful when configuring a PWM pin that
+#   controls a stepper voltage reference. The 'scale' can be set to
+#   the equivalent stepper amperage if the PWM were fully enabled, and
+#   then the 'value' parameter can be specified using the desired
+#   amperage for the stepper. The default is to not scale the 'value'
+#   parameter.
+
+#*# <---------------------- SAVE_CONFIG ---------------------->
+#*# DO NOT EDIT THIS BLOCK OR BELOW. The contents are auto-generated.
+#*#
+#*# [heater_bed]
+#*# pid_kp = 72.401
+#*# pid_ki = 1.379
+#*# pid_kd = 950.264
+#*#
+#*# [extruder]
+#*# pid_kp = 27.416
+#*# pid_ki = 1.632
+#*# pid_kd = 115.148
+#*#
+#*# [bed_mesh default]
+#*# version = 1
+#*# points =
+#*# 	  0.062500, 0.005000, 0.012500, 0.010000, 0.050000
+#*# 	  0.045000, -0.007500, -0.005000, -0.005000, 0.065000
+#*# 	  0.052500, 0.005000, -0.005000, -0.007500, 0.037500
+#*# 	  0.065000, 0.022500, 0.010000, 0.002500, 0.052500
+#*# 	  0.055000, 0.015000, 0.025000, 0.032500, 0.092500
+#*# tension = 0.2
+#*# min_x = 30.0
+#*# algo = bicubic
+#*# y_count = 5
+#*# mesh_y_pps = 2
+#*# min_y = 25.0
+#*# x_count = 5
+#*# max_y = 197.0
+#*# mesh_x_pps = 2
+#*# max_x = 197.0
+#*#
+#*# [bed_mesh p1]
+#*# version = 1
+#*# points =
+#*# 	0.072500, 0.015000, 0.025000, 0.032500, 0.062500
+#*# 	0.052500, 0.005000, 0.005000, 0.012500, 0.050000
+#*# 	0.050000, 0.002500, 0.020000, 0.017500, 0.050000
+#*# 	0.060000, 0.015000, 0.025000, 0.030000, 0.057500
+#*# 	0.072500, 0.047500, 0.050000, 0.055000, 0.072500
+#*# tension = 0.2
+#*# min_x = 30.0
+#*# algo = bicubic
+#*# y_count = 5
+#*# mesh_y_pps = 2
+#*# min_y = 25.0
+#*# x_count = 5
+#*# max_y = 197.0
+#*# mesh_x_pps = 2
+#*# max_x = 197.0
