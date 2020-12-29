@@ -4,8 +4,8 @@ sudo apt install libncurses5-dev gcc-avr
 cd ~
 git clone https://github.com/KevinOConnor/klipper
 git checkout v0.9.1
-./klipper/scripts/install-octopi.sh
 cd ~/klipper/
+./scripts/install-octopi.sh
 make menuconfig
 make
 RENAME ~/klipper/opt/klipper.bin
